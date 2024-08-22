@@ -1,38 +1,41 @@
 package com.vilaka;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-@Path("/emprestimo")
+@Path("/randomico")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class EmprestimoRest {
 
-    @POST
-    @Path("/aprovado")
-    public Response prontaResposta(){
-        return Response.ok("Crédito aprovado!").build();
-    }
+    private static final Random random = new Random();
 
-    @POST
-    @Path("/pensando")
-    public Response toPensando() throws InterruptedException{
-        TimeUnit.SECONDS.sleep(3);
-        return Response.ok("Pensei... Liberado!").build();
-    }
+    @GET
+    public Response retorno(){
 
-    @POST
-    @Path("/esgotado")
-    public Response esgotado() throws InterruptedException{
-        TimeUnit.SECONDS.sleep(5);
-        return Response.status(Response.Status.REQUEST_TIMEOUT)
-                .entity("Tempo esgotado!").build();
-    }
+        try{
+            int result = random.nextInt(3) + 1;
 
+            if (result == 1){
+                return Response.ok("Retorno imediato!").build();
+            }
+
+            if (result == 2){
+                TimeUnit.SECONDS.sleep(3);
+                return Response.ok("Esperei 3 segundos...").build();
+            }
+
+            TimeUnit.SECONDS.sleep(5);
+            throw new RuntimeException("Esperei 5 segundos e lancei uma exceção.");
+
+        }catch (InterruptedException e){
+            throw  new RuntimeException("A espera foi interrompida", e);
+        }
+
+    }
 }
