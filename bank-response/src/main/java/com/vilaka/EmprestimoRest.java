@@ -1,5 +1,7 @@
 package com.vilaka;
 
+import com.vilaka.exceptions.FiveSecondsExcpetion;
+import com.vilaka.exceptions.QualquerErroException;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -31,10 +33,11 @@ public class EmprestimoRest {
             }
 
             TimeUnit.SECONDS.sleep(5);
-            throw new RuntimeException("Esperei 5 segundos e lancei uma exceção.");
+            throw new FiveSecondsExcpetion("Esperei 5 segundos e lancei uma exceção.");
 
         }catch (InterruptedException e){
-            throw  new RuntimeException("A espera foi interrompida", e);
+            Thread.currentThread().interrupt();
+            throw  new QualquerErroException("A espera foi interrompida.");
         }
 
     }
